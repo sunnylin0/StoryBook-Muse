@@ -1,0 +1,75 @@
+{
+  "compilerOptions": {
+    //"target": "es5",
+    //"module": "esnext",
+    //"lib": [ "esnext" ],
+    //"jsx": "react",
+    //"strict": true,
+    //"moduleResolution": "node",
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true,
+    //"noImplicitReturns": true,
+    //"noFallthroughCasesInSwitch": true,
+    //"allowSyntheticDefaultImports": true,
+    //"esModuleInterop": true,
+
+
+
+    /* Basic Options */ /* 基本選項 */
+    // "incremental": true, /* Enable incremental compilation */
+    /* 啟用增量編譯 */
+    "target": "es5", /* 指定 ECMAScript 目標版本：'ES3'（默認）、'ES5'、'ES2015'、'ES2016'、'ES2017'、'ES2018'、'ES2019' 或 'ESNEXT'。 */
+    "module": "ESNext", /* 指定模塊代碼生成：'none'、'commonjs'、'amd'、'system'、'umd'、'es2015' 或 'ESNext'。 */
+    // "lib": [], /* 指定要包含在編譯中的庫文件。 */
+    "allowJs": true, /* 允許編譯 javascript 文件。 */
+    // "checkJs": true, /* 報告 .js 文件中的錯誤。 */
+    "jsx": "react", /* 指定 JSX 代碼生成：'preserve'、'react-native' 或 'react'。 */
+    // "declaration": true, /* 生成相應的 '.d.ts' 文件。 */
+    // "declarationMap": true, /* 為每個對應的 '.d.ts' 文件生成一個 sourcemap。 */
+    "sourceMap": true, /* 生成相應的“.map”文件。 */
+    // "outFile": "./", /* 連接並將輸出發送到單個文件。 */
+    "outDir": "./dist", /* 將輸出結構重定向到目錄。 */
+    // "rootDir": "./", /* 指定輸入文件的根目錄。 用於通過 --outDir 控制輸出目錄結構。 */
+    // "composite": true, /* 啟用項目編譯 */
+    // "tsBuildInfoFile": "./", /* 指定存放增量編譯信息的文件 */
+    // "removeComments": true, /* 不要向輸出發出註釋。 */
+    // "noEmit": true, /* 不發出輸出。 */
+    // "importHelpers": true, /* 從 'tslib' 導入發射助手. */
+    // "downlevelIteration": true, /* 在以 'ES5' 或 'ES3' 為目標時，為 'for-of'、傳播和解構中的迭代器提供完全支持。 */
+    // "isolatedModules": true, /* 將每個文件轉譯為一個單獨的模塊（類似於'ts.transpileModule'）。 */
+
+    /* 嚴格的類型檢查選項 */
+    "strict": true, /* 啟用所有嚴格類型檢查選項。 */
+    "noImplicitAny": true, /* 對隱含“任何”類型的表達式和聲明引發錯誤。 */
+    "strictNullChecks": true, /* 啟用嚴格的空檢查。 */
+    "strictFunctionTypes": true, /* 啟用對函數類型的嚴格檢查。 */
+    "strictBindCallApply": true, /* 在函數上啟用嚴格的 'bind'、'call' 和 'apply' 方法。 */
+    "strictPropertyInitialization": true, /* 啟用對類中屬性初始化的嚴格檢查。 */
+    "noImplicitThis": true, /* 在隱含的 'any' 類型的 'this' 表達式上引發錯誤。 */
+    // "alwaysStrict": true, /* 以嚴格模式解析並為每個源文件發出“use strict”。 */
+
+    /* 附加檢查 */
+    // "noUnusedLocals": true, /* 報告未使用的局部變量的錯誤。 */
+    // "noUnusedParameters": true, /* 報告未使用參數的錯誤。 */
+    "noImplicitReturns": true, /* 當函數中並非所有代碼路徑都返回值時報告錯誤。 */
+    "noFallthroughCasesInSwitch": true, /* 報告 switch 語句中失敗案例的錯誤。 */
+
+    /* 模塊解析選項 */
+    "moduleResolution": "node", /* 指定模塊解析策略：'node' (Node.js) 或 'classic' (TypeScript pre-1.6)。 */
+    "baseUrl": "./", /* 解析非絕對模塊名稱的基目錄。 */
+    // "paths": {}, /* 將導入重新映射到相對於“baseUrl”的查找位置的一系列條目。 */
+    // "rootDirs": [], /* 根文件夾列表，其組合內容代表項目在運行時的結構。 */
+    // "typeRoots": [], /* 包含類型定義的文件夾列表。 */
+    // "types": [], /* 要包含在編譯中的類型聲明文件。 */
+    "allowSyntheticDefaultImports": true, /* 允許從沒有默認導出的模塊中默認導入。 這不會影響代碼發出，只會影響類型檢查。 */
+    "esModuleInterop": true /* 通過為所有導入創建命名空間對象，啟用 CommonJS 和 ES 模塊之間的發射互操作性。 暗示“allowSyntheticDefaultImports”。 */
+    // "preserveSymlinks": true, /* 不解析符號鏈接的真實路徑。 */
+    // "allowUmdGlobalAccess": true, /* 允許從模塊訪問 UMD 全局變量。 */
+
+    /* 源映射選項 */
+    // "sourceRoot": "", /* 指定調試器應該定位 TypeScript 文件而不是源代碼的位置
+
+
+
+  }
+}

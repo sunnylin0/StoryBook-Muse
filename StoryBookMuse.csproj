@@ -1,0 +1,199 @@
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B770BADF-8042-4BE5-AB1B-D733E810176E}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>esbuildTS</RootNamespace>
+    <AssemblyName>esbuildTS</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <Use64BitIISExpress />
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".storybook\main.js" />
+    <Content Include=".storybook\preview.js" />
+    <Content Include="package.json" />
+    <Content Include="index.html" />
+    <Content Include="src\stories\app.css" />
+    <Content Include="src\stories\assets\code-brackets.svg" />
+    <Content Include="src\stories\assets\colors.svg" />
+    <Content Include="src\stories\assets\comments.svg" />
+    <Content Include="src\stories\assets\direction.svg" />
+    <Content Include="src\stories\assets\flow.svg" />
+    <Content Include="src\stories\assets\plugin.svg" />
+    <Content Include="src\stories\assets\repo.svg" />
+    <Content Include="src\stories\assets\stackalt.svg" />
+    <Content Include="src\stories\button.css" />
+    <Content Include="src\stories\header.css" />
+    <TypeScriptCompile Include="src\stories\app_ee.tsx" />
+    <TypeScriptCompile Include="src\stories\global\global.tsx" />
+    <TypeScriptCompile Include="src\stories\SoundConfig.tsx" />
+    <TypeScriptCompile Include="src\stories\SoundNote.tsx" />
+    <TypeScriptCompile Include="src\stories\util\html-escape.tsx" />
+    <TypeScriptCompile Include="src\stories\util\placement.tsx" />
+    <TypeScriptCompile Include="src\stories\util\string.extensions.ts" />
+    <TypeScriptCompile Include="src\stories\version.tsx" />
+    <TypeScriptCompile Include="src\stories\Sound.tsx" />
+    <TypeScriptCompile Include="src\stories\Sound.stories.tsx" />
+    <TypeScriptCompile Include="src\stories\R.tsx" />
+    <TypeScriptCompile Include="src\stories\Text.tsx" />
+    <TypeScriptCompile Include="src\stories\Range.tsx" />
+    <Content Include="src\stories\page.css" />
+    <TypeScriptCompile Include="src\stories\global\version.tsx" />
+    <Content Include="webpack.config.js" />
+    <Content Include="package-lock.json" />
+    <Content Include="tsconfig.json" />
+    <Content Include="src\stories\Introduction.stories.mdx" />
+    <Content Include="tsconfig中文.json" />
+    <Content Include="src\stories\util\dom-to-image.-ts" />
+    <Content Include="src\stories\util\editor.-ts" />
+    <Content Include="src\stories\util\file.-tsx" />
+    <Content Include="src\stories\util\load-example.-tsx" />
+    <Content Include="src\stories\util\notation.-ts" />
+    <Content Include="src\stories\util\paragraph.-ts" />
+    <Content Include="src\stories\util\tone-convert.-ts" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\app.css" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="build.js" />
+    <TypeScriptCompile Include="src\app.tsx" />
+    <TypeScriptCompile Include="src\stories\Codec.tsx" />
+    <TypeScriptCompile Include="src\stories\Fraction.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseBar.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseConfig.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseLine.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseMeasure.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseNoise.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseNotation.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseNote.tsx" />
+    <TypeScriptCompile Include="src\stories\MusePage.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseParagraph.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseRow.tsx" />
+    <TypeScriptCompile Include="src\stories\MuseTrack.tsx" />
+    <TypeScriptCompile Include="src\stories\Selector.tsx" />
+    <TypeScriptCompile Include="src\stories\Border.tsx" />
+    <TypeScriptCompile Include="src\stories\Muse.tsx" />
+    <TypeScriptCompile Include="src\stories\Button.stories.tsx" />
+    <TypeScriptCompile Include="src\stories\Button.tsx" />
+    <TypeScriptCompile Include="src\stories\Header.stories.tsx" />
+    <TypeScriptCompile Include="src\stories\Header.tsx" />
+    <TypeScriptCompile Include="src\stories\Muse.stories.tsx" />
+    <TypeScriptCompile Include="src\stories\Page.stories.tsx" />
+    <TypeScriptCompile Include="src\stories\Page.tsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\" />
+    <Folder Include="Properties\" />
+    <Folder Include="public\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>10202</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:10202/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <UserProperties package_1json__JsonSchema="" NpmRestoreOnProjectOpen="True" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>npm run build</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>if not exist "..\node_modules" (
+
+echo ERROR: npm packages have not been restored. Wait for automatic package install, or right-click package.json in Solution Explorer/Restore Packages.
+
+exit /b 1
+)</PreBuildEvent>
+  </PropertyGroup>
+</Project>
