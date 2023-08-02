@@ -68,10 +68,10 @@ export class Note implements Codec, SelectionNote {
     @observable bar: Bar;
     @observable subNotes: SubNote[] = [];
     @observable isSelect: boolean = false;
-    @observable l: number = 0;
-    @observable p: number = 0;
-    @observable d: number = 0;
-    @computed get dx(): number {
+    @observable l: number = 0;//硂╃祏4だ才 1絬8だ才 2絬6だ才 3絬
+    @observable p: number = 0;//礶翴 计
+    @observable d: number = 0;//硂Τ计禫 フ 禫ぶ?? ぃ笵
+   @computed get dx(): number {
         let dxx = false;
         this.subNotes.forEach((it) => {
             if (it.x !== "") {
@@ -160,6 +160,7 @@ export class Note implements Codec, SelectionNote {
         });
         return r;
     }
+    /** 礶翴 计 */
     @computed get tailPointsX(): number[] {
         let r: number[] = [];
         for (let i = 0; i < this.p; ++i) {
