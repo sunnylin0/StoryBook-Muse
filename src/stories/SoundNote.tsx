@@ -1,49 +1,142 @@
+﻿
 import React from "react";
 import { Border, OuterBorder } from "./Border";
-import MuseConfig from "./MuseConfig";
-import IBar from "./MuseBar";
+import Text from './Text';
+import Range from './Range';
+//import { SoundSubNote, createNote } from './SoundNote'
+import './util/string.extensions'
+import P, { calcSubTextWidth } from "./util/placement";
+
+
+
+import SoundBar,{Row, IRow } from "./SoundRow";
 import Codec from "./Codec";
 import Fraction from "./Fraction";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import Selector, { SelectionNote, SelectionSubNote } from "./Selector";
-import { Bar } from "./MuseBar";
-import Range from "./Range";
+
+import gStore,{SoundConfig} from "./SoundConfig";
 
 
-
-
+const enum notationss {
+    zero = "0",
+    do = "1",
+    re = "2",
+    mi = "3",
+    fa = "4",
+    sol = "5",
+    la = "6",
+    si = "7",
+    extend = "─",
+    separator = "│",
+    crackerOpen = "(",
+    crackerClose = ")",
+}
+//import Ns = notationss;
+const notes = [
+    notationss.zero,
+    notationss.do,
+    notationss.re,
+    notationss.mi,
+    notationss.fa,
+    notationss.sol,
+    notationss.la,
+    notationss.si,
+];
+const separators = ["│", "‖"];
 
 export interface INote {
-    n: string;
+    n?: string;
     type?: string;
     key?: string;
-    note?: string;
-    octave?: number;
-    dotted?: boolean;
-    underline?: number;
-    breakUnderline?: boolean;
-    prefixSups?: any;
+    note?: string | notationss;  //0 1 2 3 4 5 6
+    octave?: number;            //高八度，低八度
+    duration?: number;          //音附的長度 1拍約=480， 4拍=1920
+    dotted?: number;            //幾個附點音符
+    fingering?: Array<any>;     //指法
+    underline?: number;         //下面要畫幾條線
+    breakUnderline?: boolean;   //是否要跟前面的音連在一起
+    prefixSups?: any;           //升降記號 ＃　ｂ　ｏ
     topDecorators?: any;
-    tieTo?: any;
-}
-export class createNote implements INote {
-    n = "6--0@0394";
-    type = "notation";
-    key = `n_${String(Math.random())}`;
-    note = "0";
-    octave= 0;
-    dotted: false;
-    underline: 0;
-    breakUnderline: false;
-    prefixSups: [];
-    topDecorators: [];
-    tieTo: null;
+    tieTo?: { type: "start" | "stop"; num: number };       //連音線開始 結束
+    slurTo?: { type: "start" | "stop"; num: number };   //圓滑線開始 結束
 }
 
 
-export class SubNote implements SelectionSubNote {
-    readonly config: MuseConfig;
+/** 創建音符號 */
+export function createNote(initial?: INote): INote {
+    const clarDuration = (it: INote): number => {
+        let noteLen = 480;
+        if (it.underline > 0) {
+            noteLen = noteLen / (it.underline * 2);
+        }
+        //計算附點的長度，每點除 2
+        if (it.dotted > 0) {
+            let ln: number = noteLen;
+            for (var k = 0; k < it.dotted; k++) {
+                ln = ln / 2;
+                noteLen = noteLen + ln;
+            }
+        }
+        return noteLen.toNumPoint(2);
+    }
+    // 初始值
+    const n: INote = {
+        n: "6--2@0",
+        type: "notation",
+
+        key: `n_${Math.random().toString(36).substring(6)}`,//從第6個字開始抓，所以是13 - 6 = 7 個隨機數字+字母
+        note: "6",
+        octave: -2,     //高低音個數
+
+        dotted: 1,      //附點音個數
+        duration: 0,
+        underline: 2,   //下拍線個數
+        breakUnderline: false,
+        fingering: ["shake", "shake"],
+        prefixSups: ["♯", "ｂ"],
+        topDecorators: ["5", "4", "0"],
+        tieTo: null,
+    };
+    n.duration = clarDuration(n);
+    if (initial) {
+        Object.assign(n, initial);
+    }
+    return n;
+}
+
+
+/** 創建 新段落 */
+export function createParagraph(initial) {
+    const p = {
+        type: "paragraph",
+        key: `p_${Math.random().toString(36).substring(6)}`,//從第6個字開始抓，所以是13 - 6 = 7 個隨機數字+字母
+        // 符号列表
+        notations: [],
+        // 是否两端对齐
+        alignJustify: null,
+    };
+    if (initial) {
+        Object.assign(p, initial);
+    }
+    return p;
+}
+function createParagraphWithNotations() {
+
+    return createParagraph({
+        notations: [
+            createNote({ note: "0" }),
+            createNote({ note: "0" }),
+            createNote({ note: "0" }),
+            createNote({ note: "0" }),
+            createNote({ note: notationss.separator }),
+        ],
+    });
+}
+
+export class SubNote  {
+    readonly config: SoundConfig;
     @observable isSelect = false;
     @observable note: Note;
     @observable index: number;
@@ -56,7 +149,7 @@ export class SubNote implements SelectionSubNote {
         t: number,
         note: Note,
         index: number,
-        config: MuseConfig
+        config?: SoundConfig
     ) {
         this.x = x;
         this.n = n;
@@ -74,12 +167,14 @@ export class SubNote implements SelectionSubNote {
     reducePoint(h: number) {
         this.t += h;
     }
+    /** 下拍子線設定 幾個 */
     reduceLine(l: number) {
         this.note.l += l;
         if (this.note.l < 0) {
             this.note.l = 0;
         }
     }
+    /** 附點音符設定 幾個 */
     reduceTailPoint(p: number) {
         this.note.p += p;
         if (this.note.p < 0) {
@@ -91,15 +186,16 @@ export class SubNote implements SelectionSubNote {
     }
 }
 
-export class Note implements Codec, SelectionNote {
-    readonly config: MuseConfig;
+
+export class Note implements Codec  {
+    readonly config: SoundConfig;
     @observable index: number;
-    @observable bar: Bar;
+    @observable bar: Row;
     @observable subNotes: SubNote[] = [];
     @observable isSelect: boolean = false;
-    @observable l: number = 0;
-    @observable p: number = 0;
-    @observable d: number = 0;
+    @observable l: number = 0;//這拍子長短，4分音符 1線，8分音符 2線，6分音符 3線
+    @observable p: number = 0;//畫附點音附 的個數
+    @observable d: number = 0;//這有數字越大 空白 越少?? 不知道
     @computed get dx(): number {
         let dxx = false;
         this.subNotes.forEach((it) => {
@@ -126,7 +222,7 @@ export class Note implements Codec, SelectionNote {
                 if (idx !== 0) {
                     let i = -it.t;
                     for (; i > 0; --i) {
-                        let x = this.config.pointGap;
+                        let x = gStore.pointGap;
                         ny += x;
                     }
                 }
@@ -189,6 +285,7 @@ export class Note implements Codec, SelectionNote {
         });
         return r;
     }
+    /** 畫附點音附 的個數 */
     @computed get tailPointsX(): number[] {
         let r: number[] = [];
         for (let i = 0; i < this.p; ++i) {
@@ -228,7 +325,7 @@ export class Note implements Codec, SelectionNote {
         return this.bar.notesMaxHeight;
     }
     @computed get x(): number {
-        return this.bar.notesX[this.index];
+        return 0;
     }
     @computed get preMarginBottom(): number {
         let mb = 0;
@@ -249,7 +346,7 @@ export class Note implements Codec, SelectionNote {
     @computed get marginBottom(): number {
         return this.bar.notesMaxMarginBottom;
     }
-    constructor(o: INote, bar: Bar, idx: number) {
+    constructor(o: INote, bar: Row=null, idx: number=0) {
         this.config = bar.config;
         this.bar = bar;
         this.index = idx;
@@ -285,7 +382,6 @@ export class Note implements Codec, SelectionNote {
     getThis() {
         return this;
     }
-
     decode(o: INote): void {
         if (o.n !== undefined) {
             let n: string = o.n;
@@ -357,165 +453,242 @@ export class Note implements Codec, SelectionNote {
             }
         });
         let n = `${ns}@${this.l}|${this.p}`;
-        let cnote = createNote;
         return { n };
     }
 }
 
-function castX(x: string) {
-    let m: Record<string, string> = {
-        S: "#",
-        F: "b",
-        DS: "x",
-        DF: "d",
-        N: "n",
+
+
+interface SoundRNoteProps {
+    offsetX?: number;
+    offsetY?: number;
+    w?: number;
+    h?: number;
+    notation: INote;
+}
+
+const SoundRNote: React.FC<SoundRNoteProps> = ({
+    offsetX = 0, offsetY = 0, w, h, notation
+}: SoundRNoteProps) => {
+
+    const enum FingEnum {
+        shake = "shake",
+        wheel = "wheel"
     };
-    return m[x] || "";
-}
+    const underlineOffset = P.underlineStepOffsetY * (notation.underline | 0);
 
-/**
- * �e���׭��I
- * @param note.pointsY  Y �b����m
- * @param clazz
- */
-const pointGroup=(note: Note, clazz: string)=> {
-    return (
-        <g className={clazz + "__group-point"}>
-            {note.pointsY.map((it, idx) => (
-                <circle
-                    key={idx}
-                    r={note.config.pointRound}
-                    fill="black"
-                    transform={
-                        "translate(" +
-                        (note.dx + note.config.noteWidth / 2) +
-                        "," +
-                        (note.height - it + note.config.pointGap / 2) +
-                        ")"
-                    }
-                />
-            ))}
+    // octaveInitialOffset 八度初始偏移
+    const octaveInitialOffset =
+        notation.octave > 0
+            ? -P.octaveInitialOffsetAbove
+            : P.octaveInitialOffsetBelow + underlineOffset;
+    // octaveStepOffset 八度步進偏移
+    const octaveStepOffset = (notation.octave > 0 ? -1 : 1) * P.octaveStepOffsetY;
+    let topDecoratorOffset = 0;
+    if (notation.octave > 0) {
+        // 如果有高八度圆点，将顶部装饰符渲染到其上方
+        topDecoratorOffset = octaveStepOffset * Math.abs(notation.octave);
+    }
+
+    /** 繪前綴文字  */
+    const renderPrefixSups = () => {
+        const sups = notation.prefixSups || [];
+        const rendered = sups.map((s, i) => {
+            let props = {}
+            return (<Text
+                key={i + s}
+                dominantBaseline="middle"
+                textAnchor="middle"
+                fontSize={gStore.defaultSubFontSize}
+                fontFamily={gStore.defaultFontFamily}
+                x={-P.xWidth - (calcSubTextWidth(sups.slice(0, i).join("")) + 2 * i)}
+                y={-P.subXHeight / 2 + 2}
+            >
+                {s}
+            </Text>);
+        });
+        return rendered;
+    };
+
+    /** 繪上綴音符 */
+    const renderTopDecorators = () => {
+        const decs = notation.topDecorators || [];
+        const rendered = decs.map((d, i) => (
+            <Text
+                key={i + d}
+                dominantBaseline="middle"
+                textAnchor="middle"
+                fontSize={gStore.noteSubFontSize}
+                fontFamily={gStore.noteFontFamily}
+                y={topDecoratorOffset - (i + 1) * P.subXHeight + 2}
+            >
+                {d}
+            </Text>
+        ));
+        return rendered;
+    };
+
+    /**
+     * 創建陣列 元素為 0 的陣列
+     * @param octave 陣列的個數
+     */
+    function composeArray(octave: number | string): Array<number> | null {
+        const len = Math.abs(Number(octave));
+        if (!Number.isInteger(len)) {
+            return [];
+        }
+        return Array(len).fill(0, 0, len);
+    }
+
+    /** 劃指法 */
+    const renderFingering = () => {
+        const fing = notation.fingering || [];
+        const rendered = fing.map((f, i) => (function () {
+            switch (f.kind) {
+                case FingEnum.shake:
+                    console.log('FingEnum.shake.');
+                    return (
+                        <Text
+                            key={i + f}
+                            dominantBaseline="middle"
+                            textAnchor="middle"
+                            fontSize={gStore.defaultSubFontSize}
+                            y={topDecoratorOffset - P.subXHeight * 3}>
+                            k
+                        </Text >);
+                    break;
+                case FingEnum.wheel:
+                    console.log('FingEnum.wheel.');
+                    return (<Text
+                        key={i + f}
+                        dominantBaseline="middle"
+                        textAnchor="middle"
+                        fontSize={gStore.defaultSubFontSize}
+                        y={P.subXHeight * .5}>
+                        w
+                    </Text >);
+                    break;
+                default:
+                    console.log(`Sorry, we are out of ${f.kind}.`);
+                    return (<Text
+                        key={i + f}
+                        dominantBaseline="middle"
+                        textAnchor="middle"
+                        fontSize={gStore.noteSubFontSize}
+                        y={topDecoratorOffset - (i + 1) * P.subXHeight + 2}>
+                        {f}
+                    </Text >);
+            }
+        }
+
+
+        ));
+        return rendered;
+    };
+
+    /** 畫本音附 01234567 */
+    const renderNote = () => {
+        let transform;
+        let props: any;
+
+        if (notation.note === "string") {//notations.extend) {
+            // 延音符太长了缩短一点
+            console.log("transform scale(0.8, 1)");
+            transform = "scale(0.8, 1)";
+        }
+        props = {
+            dominantBaseline: "middle",
+            textAnchor: "middle",
+            fontSize: gStore.noteFontSize,
+            fontFamily: gStore.noteFontFamily,
+            transform
+        }
+        console.log("renderNotr");
+        return (<g>
+            <circle cx="0" cy="0" fill="red" r="1" ></circle>
+            <Text {...props}>
+                {notation.note}
+            </Text>
         </g>
+        );
+    };
+
+    /** 繪 高八度 / 低八度 */
+    const renderOctave = () => {
+        return composeArray(notation.octave).map((oc, i) => (
+            <g key={ i}>
+                <circle
+                    key={i}
+                    type="octave"
+                    cx="0"
+                    cy={(octaveInitialOffset + octaveStepOffset * i).toNumPoint(2)}
+                    fill="currentColor"
+                    r="2"
+                ></circle>
+                <circle  cx="0" cy="10" fill="red" r="1" ></circle>
+            </g>
+        ));
+    };
+
+    return (
+        <Range clazz={"note " + notation.key} key={notation.key} offsetX={offsetX?.toNumPoint(2)} offsetY={offsetY?.toNumPoint(2)}>
+
+            {renderPrefixSups()}
+            {renderTopDecorators()}
+
+            {renderNote()}
+            {composeArray(notation.dotted).map((n, i) => (
+                <circle
+                    key={i}
+                    type="dot"
+                    cx={P.xWidth + 8 * (i)}
+                    cy="-2"
+                    r="2"
+                    fill="currentColor"
+                ></circle>))}
+            {renderOctave()}
+        </Range>
     );
 }
 
-/**
- * �e���I����
- * @param note
- * @param clazz
- */
-function tailPoint(note: Note, clazz: string) {
-    return (
-        <g className={clazz + "__tail-point"}>
-            {note.tailPointsX.map((it, idx) => (
-                <circle
-                    key={idx}
-                    r={note.config.pointRound}
-                    fill="black"
-                    transform={
-                        "translate(" +
-                        it +
-                        "," +
-                        (note.height - note.config.noteHeight / 3) +
-                        ")"
-                    }
-                />
-            ))}
-        </g>
-    );
-}
 
-interface SoundSubNoteProps {
+
+interface SoundNoteProps {
     dx: number;
     y: number;
     w: number;
     h: number;
-    subNote: SubNote;
+    note?: Note;
 }
 
-export const SoundSubNote = observer((props: SoundSubNoteProps) => {
-//observer(
-//function MuseSubNote(props: MuseSubNoteProps) {
-    return (
-        <g
-            className={"muse-note__subnote"}
-            transform={"translate(" + 0 + "," + props.y + ")"}
-            width={props.w}
-            height={props.h}
-            onClick={() => {
-                Selector.instance.selectSubNote(props.subNote);
-            }}
-        >
-            <text
-                fontFamily={props.subNote.config.noteFontFamily}
-                fontSize={props.subNote.config.noteFontSize}
-                transform={"translate(" + props.dx + "," + 0 + ")"}
-            >
-                {props.subNote.n}
-            </text>
-            <text
-                fontFamily={props.subNote.config.noteFontFamily}
-                fontSize={props.subNote.config.sigFontSize}
-                transform={
-                    "translate(" +
-                    0 +
-                    "," +
-                    (props.subNote.config.sigFontSize -
-                        props.subNote.config.noteHeight) +
-                    ")"
-                }
-            >
-                {castX(props.subNote.x)}
-            </text>
-            <Border
-                x={0}
-                y={-props.h}
-                w={props.w}
-                h={props.subNote.config.noteFontSize}
-                clazz={"muse-note__subnote"}
-                show={props.subNote.isSelect}
-            />
-        </g>
-    );
-}
-
-    )
 
 observer
-function SoundNote( props:any ) {    
-        let clazz = "muse-note";
-    return (
-            <g
-                className={clazz}
-                transform={"translate(" + props.note.x + "," + 0 + ")"}
-                width={props.note.width}
-                height={props.note.height}
-                onClick={() => {
-                    Selector.instance.selectNote(props.note);
-                }}
-            >
-                <OuterBorder
-                    w={props.note.width}
-                    h={props.note.height + props.note.marginBottom}
-                    clazz={clazz}
-                    show={props.note.isSelect}
-                    color={"blue"}
-                />
-                {props.note.subNotes.map((it:any, idx:number) => (
-                    <SoundSubNote
-                        key={idx}
-                        dx={props.note.dx}
-                        y={props.note.height - props.note.notesY[idx]}
-                        w={props.note.width}
-                        h={22}
-                        subNote={it}
-                    />
-                ))}
-                {pointGroup(props.note, clazz)}
-                {tailPoint(props.note, clazz)}
-            </g>
-        );
+function SoundNote(props: SoundNoteProps) {
+    const clazz = "Sound-note";
     
+    return (
+        <g
+            className={clazz}
+            transform={"translate(" +  props.dx  + "," + props.y + ")"}
+            onClick={() => {
+               // Selector.instance.selectNote(props.note);
+            }}
+        >
+            <SoundRNote
+                offsetX={0}
+                offsetY={0}
+                w={20}
+                h={22}
+                notation={  createNote({})}
+            />
+            
+        
+            {/*{pointGroup(props.note, clazz)}*/}
+            {/*{tailPoint(props.note, clazz)}*/}
+        </g>
+    );
+
 }
 
-export default observer(SoundNote);
+export default SoundNote;
+

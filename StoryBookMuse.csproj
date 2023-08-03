@@ -87,13 +87,14 @@
     <Content Include="src\stories\header.css" />
     <TypeScriptCompile Include="src\stories\app_ee.tsx" />
     <TypeScriptCompile Include="src\stories\global\global.tsx" />
+    <TypeScriptCompile Include="src\stories\SoundRow.tsx" />
+    <TypeScriptCompile Include="src\stories\Sound.tsx" />
     <TypeScriptCompile Include="src\stories\SoundConfig.tsx" />
-    <TypeScriptCompile Include="src\stories\SoundNote.tsx" />
     <TypeScriptCompile Include="src\stories\util\html-escape.tsx" />
     <TypeScriptCompile Include="src\stories\util\placement.tsx" />
     <TypeScriptCompile Include="src\stories\util\string.extensions.ts" />
     <TypeScriptCompile Include="src\stories\version.tsx" />
-    <TypeScriptCompile Include="src\stories\Sound.tsx" />
+    <TypeScriptCompile Include="src\stories\SoundNote.tsx" />
     <TypeScriptCompile Include="src\stories\Sound.stories.tsx" />
     <TypeScriptCompile Include="src\stories\R.tsx" />
     <TypeScriptCompile Include="src\stories\Text.tsx" />

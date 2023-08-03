@@ -45,12 +45,14 @@ export class SubNote implements SelectionSubNote {
     reducePoint(h: number) {
         this.t += h;
     }
+    /** 下拍子線設定 幾個 */
     reduceLine(l: number) {
         this.note.l += l;
         if (this.note.l < 0) {
             this.note.l = 0;
         }
     }
+    /** 附點音符設定 幾個 */
     reduceTailPoint(p: number) {
         this.note.p += p;
         if (this.note.p < 0) {
@@ -453,7 +455,7 @@ const MuseSubNote = observer((props: MuseSubNoteProps) => {
     )
 
 observer
-function MuseNote( props:any ) {
+function MuseNote( note:Note ) {
     
         let clazz = "muse-note";
         return (
@@ -467,24 +469,24 @@ function MuseNote( props:any ) {
                 }}
             >
                 <OuterBorder
-                    w={props.note.width}
-                    h={props.note.height + props.note.marginBottom}
+                    w={note.width}
+                    h={note.height + note.marginBottom}
                     clazz={clazz}
-                    show={props.note.isSelect}
+                    show={note.isSelect}
                     color={"blue"}
                 />
-                {props.note.subNotes.map((it:any, idx:number) => (
+                {note.subNotes.map((it:any, idx:number) => (
                     <MuseSubNote
                         key={idx}
-                        dx={props.note.dx}
-                        y={props.note.height - props.note.notesY[idx]}
-                        w={props.note.width}
+                        dx={note.dx}
+                        y={note.height - note.notesY[idx]}
+                        w={note.width}
                         h={22}
                         subNote={it}
                     />
                 ))}
-                {pointGroup(props.note, clazz)}
-                {tailPoint(props.note, clazz)}
+                {pointGroup(note, clazz)}
+                {tailPoint(note, clazz)}
             </g>
         );
     

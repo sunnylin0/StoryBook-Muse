@@ -4,62 +4,62 @@ import { VERSION } from "./version";
 //import { getDefaultGlobalDataWidthNotations } from "../util/editor";
 
 // 全局数据及配置，需要持久化
-export interface IinitialData {
-    version?:number,
-    canvasWidth?: number,
-    canvasHeight?: number,
-    defaultFontSize?: number,
-    defaultFontFamily?: string,
-    defaultSubFontSize?: number,
-    title?: string,
-    tone?: string,
-    marginHorizontal?: number,
-    marginTop?: number,
-    gapAfterTitle?: number,
-    gapAfterHeader?: number,
-    gapBetweenParagraph?: number,
-    gapBetweenNotation?: number,
-    beat?:Array<number>,
-    speed?: number,
-    authors?: Array<any>,
-    notations?: Array<any>,
+export interface SoundConfig {
+    version?: number;
+    canvasWidth?: number;
+    canvasHeight?: number;
+    defaultFontSize?: number;
+    defaultFontFamily?: string;
+    defaultSubFontSize?: number;
+    title?: string;
+    tone?: string;
+    marginHorizontal?: number;
+    marginTop?: number;
+    gapAfterTitle?: number;
+    gapAfterHeader?: number;
+    gapBetweenParagraph?: number;
+    gapBetweenNotation?: number;
+    beat?: Array<number>;
+    speed?: number;
+    authors?: Array<any>;
+    notations?: Array<any>;
 
     /* 增加的 */
 
-    noteHeight?: number,
-    noteWidth?: number,
-    noteFontSize?: number,
-    noteFontFamily?: string,
-    sigFontSize?: number,
-    trackGap?: number,
-    lineGap?: number,
+    noteHeight?: number;
+    noteWidth?: number;
+    noteFontSize?: number;
+    noteFontFamily?: string;
+    noteSubFontSize?: number;
+    trackGap?: number;
+    lineGap?: number;
 
-    noiseHeight?: number,
-    noiseWidth?: number,
-    noiseFontSize?: number,
-    noiseFontFamily?: string,
+    //noiseHeight?: number,
+    //noiseWidth?: number,
+    //noiseFontSize?: number,
+    //noiseFontFamily?: string,
     //sigFontSize = 14;
-    measureGap?: number,
-    paragraphGap?: number,
+    measureGap?: number;
+    paragraphGap?: number;
 
 
-    pageE?: number,
-    pageWidth?: number,
-    pageMarginHorizontal?: number,
-    pageMarginVertical?: number,
+    pageE?: number;
+    pageWidth?: number;
+    pageMarginHorizontal?: number;
+    pageMarginVertical?: number;
 
-    infoTitleFontSize?: number,
-    infoSubtitleFontSize?: number,
-    infoGap?: number,
-    infoFontSize?: number,
+    infoTitleFontSize?: number;
+    infoSubtitleFontSize?: number;
+    infoGap?: number;
+    infoFontSize?: number;
 
-    pageIndexFontSize?: number,
+    pageIndexFontSize?: number;
     /*  font-family?: source - code - pro, Menlo, Monaco, Consolas, 'Courier New', monospace;*/
-    textFontFamily?: string,
+    textFontFamily?: string;
 
-    showBorder?: boolean,
+    showBorder?: boolean;
 }
-const initialData: IinitialData = {
+const initialData: SoundConfig = {
     version: VERSION,
     canvasWidth: 896,
     canvasHeight: 1024,
@@ -85,14 +85,14 @@ const initialData: IinitialData = {
     noteWidth : 11,
     noteFontSize : 22,
     noteFontFamily : 'sans-serif',
-    sigFontSize : 14,
+    noteSubFontSize : 18,
     trackGap : 10,
     lineGap : 40,
 
-    noiseHeight : 22,
-    noiseWidth : 11,
-    noiseFontSize : 22,
-    noiseFontFamily : 'sans-serif',
+    //noiseHeight : 22,
+    //noiseWidth : 11,
+    //noiseFontSize : 22,
+    //noiseFontFamily : 'sans-serif',
     //sigFontSize = 14;
     measureGap : 10,
     paragraphGap : 40,
@@ -115,10 +115,10 @@ const initialData: IinitialData = {
     showBorder : false,    
 };
 
-function getDefaultGlobalData(): IinitialData {
+function getDefaultGlobalData(): SoundConfig {
     return JSON.parse(JSON.stringify(initialData));
 }
-function getDefaultGlobalDataWidthNotations(): IinitialData {
+function getDefaultGlobalDataWidthNotations(): SoundConfig {
     const d = getDefaultGlobalData();
     // d.paragraphs = [createParagraphWithNotations()];
     return d;

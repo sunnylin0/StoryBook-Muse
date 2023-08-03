@@ -3,7 +3,7 @@ import React from "react";
 
 
 @observer
-class Music extends React.Component<{ }> {
+class Sound extends React.Component<{ }> {
   render() {
     return (
       <div>
@@ -13,4 +13,4 @@ class Music extends React.Component<{ }> {
   }
 }
 
-export default Music;
+export default Sound;

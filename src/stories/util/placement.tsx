@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { observable } from "mobx";
-import  store  from "../global/global";
+import gStore  from "../SoundConfig";
 
 
 // ENHANCE: 通过mobx的computed机制缓存一些计算值
@@ -19,7 +19,7 @@ function _initializeCanvas(fontSize: number) {
     
     
   context2D.font = `${
-    fontSize || store.defaultFontSize
+    fontSize || gStore.defaultFontSize
   }px ${defaultFontFamily}`;
 }
 
@@ -57,7 +57,7 @@ function _hasTie(paragraph) {
 
 const placement = observable({
   get maxContentWidth() {
-    return Math.max(store.canvasWidth - store.marginHorizontal * 2, 0);
+    return Math.max(gStore.canvasWidth - gStore.marginHorizontal * 2, 0);
   },
   get minTieHeight() {
     return 8;
@@ -85,28 +85,28 @@ const placement = observable({
   },
   get titleOffsetY() {
     const titleHeight = 32;
-    return store.marginTop + titleHeight + store.gapAfterTitle;
+    return gStore.marginTop + titleHeight + gStore.gapAfterTitle;
   },
   get headerOffsetY() {
     const leftInfoBlockHeight = this.xHeight * 2;
     const titleOffset = this.titleOffsetY;
     const leftInfoBlockOffset = titleOffset + leftInfoBlockHeight;
     const rightInfoBlockOffset =
-      titleOffset + this.xHeight * store.authors.length;
+      titleOffset + this.xHeight * gStore.authors.length;
     return (
       Math.max(titleOffset, leftInfoBlockOffset, rightInfoBlockOffset) +
-      store.gapAfterHeader
+      gStore.gapAfterHeader
     );
   },
   get baseFontData() {
-    const data = _calcTextBox(store.defaultFontSize, "x");
+    const data = _calcTextBox(gStore.defaultFontSize, "x");
     return {
       xWidth: data.width,
       xHeight: data.height,
     };
   },
   get baseSubFontData() {
-    const data = _calcTextBox(store.defaultSubFontSize, "x");
+    const data = _calcTextBox(gStore.defaultSubFontSize, "x");
     return {
       xWidth: data.width,
       xHeight: data.height,
@@ -126,12 +126,12 @@ const placement = observable({
   },
 });
 
-const calcTextWidth = _calcTextWidth.bind(null, store.defaultFontSize);
-const calcSubTextWidth = _calcTextWidth.bind(null, store.defaultSubFontSize);
+const calcTextWidth = _calcTextWidth.bind(null, gStore.defaultFontSize);
+const calcSubTextWidth = _calcTextWidth.bind(null, gStore.defaultSubFontSize);
 
 // 计算段落占的空间高
 function calcParagraphHeight(paragraph) {
-  return calcParagraphContentHeight(paragraph) + store.gapBetweenParagraph;
+  return calcParagraphContentHeight(paragraph) + gStore.gapBetweenParagraph;
 }
 // 计算段落内容的高度
 function calcParagraphContentHeight(paragraph) {
@@ -163,7 +163,7 @@ function calcParagraphWidth(paragraph) {
   return (
     notations
       .map((n) => calcNotationWidth(n))
-      .reduce((prev, curr) => prev + curr, 0) - store.gapBetweenNotation
+      .reduce((prev, curr) => prev + curr, 0) - gStore.gapBetweenNotation
   );
 }
 
@@ -212,7 +212,7 @@ function calcNotationAboveOffset(notation) {
 
 // 计算音符总体宽度
 function calcNotationWidth(notation) {
-  const noteWidth = calcTextWidth(notation.note) + store.gapBetweenNotation;
+  const noteWidth = calcTextWidth(notation.note) + gStore.gapBetweenNotation;
   const dotWidth = 8;
   const prefixWidth = calcNotationPrefixOffset(notation);
   return prefixWidth + noteWidth + (notation.dotted ? dotWidth : 0);
