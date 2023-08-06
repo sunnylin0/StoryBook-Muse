@@ -74,6 +74,7 @@
     <Content Include=".storybook\preview.js" />
     <Content Include="package.json" />
     <Content Include="index.html" />
+    <Content Include="src\stories\txViewText.module.css" />
     <Content Include="src\stories\app.css" />
     <Content Include="src\stories\assets\code-brackets.svg" />
     <Content Include="src\stories\assets\colors.svg" />
@@ -84,9 +85,20 @@
     <Content Include="src\stories\assets\repo.svg" />
     <Content Include="src\stories\assets\stackalt.svg" />
     <Content Include="src\stories\button.css" />
+    <TypeScriptCompile Include="src\stories\global\history.tsx" />
+    <TypeScriptCompile Include="src\stories\global\state.tsx" />
     <Content Include="src\stories\header.css" />
     <TypeScriptCompile Include="src\stories\app_ee.tsx" />
     <TypeScriptCompile Include="src\stories\global\global.tsx" />
+    <TypeScriptCompile Include="src\stories\global\react-app-env.d.ts" />
+    <TypeScriptCompile Include="src\stories\txMuseConfig.tsx" />
+    <TypeScriptCompile Include="src\stories\txMuseMeasure.tsx" />
+    <None Include="src\stories\txMuseNoise.-tsx" />
+    <None Include="src\stories\txMuseRow.-tsx" />
+    <None Include="src\stories\txSelector__._tsx" />
+    <TypeScriptCompile Include="src\stories\txSelector.tsx" />
+    <TypeScriptCompile Include="src\stories\txViewText.tsx" />
+    <TypeScriptCompile Include="src\stories\txSelectEdit.tsx" />
     <TypeScriptCompile Include="src\stories\SoundRow.tsx" />
     <TypeScriptCompile Include="src\stories\Sound.tsx" />
     <TypeScriptCompile Include="src\stories\SoundConfig.tsx" />
@@ -183,7 +195,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties package_1json__JsonSchema="" NpmRestoreOnProjectOpen="True" />
+      <UserProperties NpmRestoreOnProjectOpen="True" package_1json__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

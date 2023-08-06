@@ -81,38 +81,38 @@ const initialData: SoundConfig = {
 
     /* 增加的 */
 
-    noteHeight : 22,
-    noteWidth : 11,
-    noteFontSize : 22,
-    noteFontFamily : 'sans-serif',
-    noteSubFontSize : 18,
-    trackGap : 10,
-    lineGap : 40,
+    noteHeight: 22,
+    noteWidth: 11,
+    noteFontSize: 22,
+    noteFontFamily: 'sans-serif',
+    noteSubFontSize: 18,
+    trackGap: 10,
+    lineGap: 40,
 
     //noiseHeight : 22,
     //noiseWidth : 11,
     //noiseFontSize : 22,
     //noiseFontFamily : 'sans-serif',
     //sigFontSize = 14;
-    measureGap : 10,
-    paragraphGap : 40,
+    measureGap: 10,
+    paragraphGap: 40,
 
 
-    pageE : 1.414,
-    pageWidth : 1000,
-    pageMarginHorizontal : 100,
-    pageMarginVertical : 110,
+    pageE: 1.414,
+    pageWidth: 1000,
+    pageMarginHorizontal: 100,
+    pageMarginVertical: 110,
 
-    infoTitleFontSize : 34,
-    infoSubtitleFontSize : 22,
-    infoGap : 7,
-    infoFontSize : 20,
+    infoTitleFontSize: 34,
+    infoSubtitleFontSize: 22,
+    infoGap: 7,
+    infoFontSize: 20,
 
-    pageIndexFontSize : 20,
+    pageIndexFontSize: 20,
     /*  font-family: source - code - pro, Menlo, Monaco, Consolas, 'Courier New', monospace;*/
-    textFontFamily : 'source - code - pro, Menlo, Monaco, Consolas, "Courier New", monospace',
+    textFontFamily: 'source - code - pro, Menlo, Monaco, Consolas, "Courier New", monospace',
 
-    showBorder : false,    
+    showBorder: false,
 };
 
 function getDefaultGlobalData(): SoundConfig {
@@ -129,5 +129,5 @@ const globalStore = observable(getDefaultGlobalDataWidthNotations());
 const GlobalContext = React.createContext(globalStore);
 
 
-export default globalStore ;
+export default globalStore;
 export { GlobalContext };

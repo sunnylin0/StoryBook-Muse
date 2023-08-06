@@ -1,0 +1,415 @@
+﻿
+import { toJS } from 'mobx'
+import { Row, IRow } from "./txMuseRow";
+import { Noise, SubNoise, INoise } from "./txMuseNoise";
+
+
+
+
+export interface SelectionSubNoise {
+    setIsMove: (s: boolean) => void;
+    setSelect: (i: boolean) => void;
+    getThis: () => SubNoise;
+    setNum: (n: string) => void;
+    reducePoint: (h: number) => void;
+    reduceLine: (l: number) => void;
+    reduceTailPoint: (p: number) => void;
+}
+
+export interface SelectionNoise {
+    setIsMove: (s: boolean) => void;
+    setSelect: (i: boolean) => void;
+    getThis: () => Noise;
+    reduceLine: (l: number) => void;
+    reduceTailPoint: (p: number) => void;
+    addSubNoise: (index: number) => void;
+    removeSubNoise: (index: number) => void;
+}
+
+export interface SelectionRow {
+    setIsMove: (s: boolean) => void;
+    setSelect: (i: boolean) => void;
+    getThis: () => Row;
+    addNoise: (index: number) => void;
+    removeNoise: (index: number) => void;
+}
+
+interface globalSateProp {
+    selectedNotationKey?: string;
+    /** 记录上次选中的符号，之后可恢复焦点 */
+    lastSelectedNotationKey?: string;
+    selectedNotationObject?: string;
+    /** 记录上次选中的符号，之后可恢复焦点 */
+    lastSelectedNotationObject?: object;
+
+    /** 当前点击事件是否应该让符号失去焦点。应该在符号自身和菜单等点击事件中将其置为false  */
+    shouldNotationBlurAfterClick?: boolean;
+    /** 正在操作的连音线起点  */
+    tieSourceKey?: string;
+    /** 帮助弹窗是否可见  */
+    helpDialogVisible?: boolean;
+    /** 配置项弹窗是否可见  */
+    configDialogVisible?: boolean;
+    /** 复制剪贴的内容  */
+    clipboardContent?: any;
+}
+
+class Selector {
+
+    subnoise: SelectionSubNoise | null = null;
+    noise: SelectionNoise | null = null;
+    row: SelectionRow | null = null;
+
+    isObjectMove: any | null = null;
+    static instance = new Selector();
+
+    selectedNotationKey?: string;
+    /** 记录上次选中的符号，之后可恢复焦点 */
+    lastSelectedNotationKey?: string;
+    selectedNotationObject?: string;
+    /** 记录上次选中的符号，之后可恢复焦点 */
+    lastSelectedNotationObject?: object;
+    /** 当前点击事件是否应该让符号失去焦点。应该在符号自身和菜单等点击事件中将其置为false  */
+    shouldNotationBlurAfterClick?: boolean;
+    /** 正在操作的连音线起点  */
+    tieSourceKey?: string;
+    /** 帮助弹窗是否可见  */
+    helpDialogVisible?: boolean;
+    /** 配置项弹窗是否可见  */
+    configDialogVisible?: boolean;
+    /** 复制剪贴的内容  */
+    clipboardContent?: any;
+
+    private constructor() {
+        document.addEventListener("keydown", (ev) => {
+            if (!this.keySubNoise(ev)) {
+                if (!this.keyNoise(ev)) {
+                    if (!this.keyRow(ev)) {
+                        ev.returnValue = false;
+                    } else ev.returnValue = false;
+                } else ev.returnValue = false;
+            } else ev.returnValue = false;
+        });
+    }
+    moveObject(o: any) {
+        console.log("moveObject(o: any)");
+        this.isObjectMove?.setIsMove(false);
+        this.isObjectMove = o;
+        this.isObjectMove.setIsMove(true);
+    }
+
+
+    // 创建符号
+    createNotation(initial: INoise = null): INoise {
+        const st: INoise = {
+            type: "notation",
+            key: `n_${String(Math.random())}`,
+            n: "0@0|0",
+            note: '0'
+        };
+        if (initial) {
+            Object.assign(st, initial);
+        }
+        return st;
+    }
+    cloneNotation(notation: INoise): INoise {
+        const origin = JSON.parse(JSON.stringify(toJS(notation)));
+        delete origin.key;
+        const n = this.createNotation(origin);
+        return n;
+    }
+
+
+
+    // 新建段落
+    createRow(initial: IRow): IRow {
+        const p: IRow = {
+            type: "paragraph",
+            key: `p_${String(Math.random())}`,
+            // 符号列表
+            noises: [],
+            // 是否两端对齐
+            alignJustify: null,
+        };
+        if (initial) {
+            Object.assign(p, initial);
+        }
+        return p;
+    }
+    createRowWithNotations(): IRow {
+        return this.createRow({
+            noises: [
+                this.createNotation({ note: "0" }),
+                this.createNotation({ note: "0" }),
+                this.createNotation({ note: "0" }),
+                this.createNotation({ note: "0" }),
+                this.createNotation({ note: "|" }),
+            ],
+        });
+    }
+    cloneRow(paragraph):IRow {
+        const origin = JSON.parse(JSON.stringify(toJS(paragraph)));
+        delete origin.key;
+        origin.notations = paragraph.notations.map((n) => this.cloneNotation(n));
+        return this.createRow(origin);
+    }
+
+
+
+    keySubNoise(ev: KeyboardEvent): boolean {
+        if (this.subnoise !== null) {
+            switch (ev.key) {
+                case "Escape":
+                    this.subnoise.setSelect(false);
+                    this.subnoise = null;
+                    this.noise?.setSelect(true);
+                    return true;
+                case "Backspace":
+                    if (this.noise) {
+                        let idx = this.subnoise.getThis().index;
+                        this.noise.removeSubNoise(this.subnoise.getThis().index);
+                        if (this.noise.getThis().subNoises.length === 0) {
+                            this.noise.setSelect(true);
+                            this.subnoise.setSelect(false);
+                            this.subnoise = null;
+                        } else {
+                            if (idx === 0) {
+                                this.subnoise = this.noise.getThis().subNoises[0];
+                                this.subnoise.setSelect(true);
+                            } else {
+                                this.subnoise = this.noise.getThis().subNoises[idx - 1];
+                                this.subnoise.setSelect(true);
+                            }
+                        }
+                    }
+                    return true;
+                case " ":
+                    return true;
+                case "z":
+                    if (this.noise) {
+                        this.noise?.addSubNoise(0);
+                        this.selectSubNoise(this.noise?.getThis().subNoises[0]);
+                    }
+                    return true;
+                case "x":
+                    if (this.noise) {
+                        let idx = this.subnoise.getThis().index;
+                        this.noise?.addSubNoise(idx);
+                        this.selectSubNoise(this.noise?.getThis().subNoises[idx]);
+                    }
+                    return true;
+                case "c":
+                    if (this.noise) {
+                        let idx = this.subnoise.getThis().index;
+                        this.noise?.addSubNoise(idx + 1);
+                        this.selectSubNoise(this.noise?.getThis().subNoises[idx + 1]);
+                    }
+                    return true;
+                case "v":
+                    if (this.noise) {
+                        this.noise?.addSubNoise(this.noise.getThis().subNoises.length);
+                        this.selectSubNoise(
+                            this.noise?.getThis().subNoises[
+                            this.noise.getThis().subNoises.length - 1
+                            ]
+                        );
+                    }
+                    return true;
+                case "ArrowUp":
+                    if (this.noise) {
+                        let l = this.noise.getThis().subNoises.length;
+                        if (l > this.subnoise.getThis().index + 1) {
+                            this.subnoise.setSelect(false);
+                            this.subnoise = this.noise.getThis().subNoises[
+                                this.subnoise.getThis().index + 1
+                            ];
+                            this.subnoise.setSelect(true);
+                        }
+                    }
+                    return true;
+                case "ArrowDown":
+                    if (this.noise) {
+                        if (this.subnoise.getThis().index > 0) {
+                            this.subnoise.setSelect(false);
+                            this.subnoise = this.noise.getThis().subNoises[
+                                this.subnoise.getThis().index - 1
+                            ];
+                            this.subnoise.setSelect(true);
+                        }
+                    }
+                    return true;
+                case "ArrowLeft":
+                    return true;
+                case "ArrowRight":
+                    return true;
+                case "0":
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "-":
+                    this.subnoise.setNum(ev.key);
+                    return true;
+                case "r":
+                    this.subnoise.reducePoint(1);
+                    return true;
+                case "f":
+                    this.subnoise.reducePoint(-1);
+                    return true;
+                case "q":
+                    this.subnoise.reduceLine(-1);
+                    return true;
+                case "a":
+                    this.subnoise.reduceLine(1);
+                    return true;
+                case "s":
+                    this.subnoise.reduceTailPoint(-1);
+                    return true;
+                case "d":
+                    this.subnoise.reduceTailPoint(1);
+                    return true;
+                default:
+                    return false;
+            }
+        } else return false;
+    }
+    keyNoise(ev: KeyboardEvent): boolean {
+        if (this.noise) {
+            switch (ev.key) {
+                case "Enter":
+                    if (this.noise.getThis().subNoises.length <= 0) {
+                        this.noise.addSubNoise(this.noise.getThis().subNoises.length);
+                    }
+                    this.subnoise = this.noise.getThis().subNoises[0];
+                    this.subnoise.setSelect(true);
+                    this.noise.setSelect(false);
+                    return true;
+                case "Escape":
+                    this.noise.setSelect(false);
+                    this.noise = null;
+                    this.row?.setSelect(true);
+                    return true;
+                case " ":
+                    this.noise.addSubNoise(this.noise.getThis().subNoises.length);
+                    return true;
+                case "z":
+                    if (this.row) {
+                        this.row?.addNoise(0);
+                        this.selectNoise(this.row?.getThis().noises[0]);
+                    }
+                    return true;
+                case "x":
+                    if (this.row) {
+                        let idx = this.noise.getThis().index;
+                        this.row?.addNoise(idx);
+                        this.selectNoise(this.row?.getThis().noises[idx]);
+                    }
+                    return true;
+                case "c":
+                    if (this.row) {
+                        let idx = this.noise.getThis().index;
+                        this.row?.addNoise(idx + 1);
+                        this.selectNoise(this.row?.getThis().noises[idx + 1]);
+                    }
+                    return true;
+                case "v":
+                    if (this.row) {
+                        this.row?.addNoise(this.row.getThis().noises.length);
+                        this.selectNoise(
+                            this.row?.getThis().noises[this.row.getThis().noises.length - 1]
+                        );
+                    }
+                    return true;
+                case "Backspace":
+                    if (this.row) {
+                        let idx = this.noise.getThis().index;
+                        this.row.removeNoise(idx);
+                        if (this.row.getThis().noises.length === 0) {
+                            this.row.setSelect(true);
+                            this.noise.setSelect(false);
+                            this.noise = null;
+                        } else {
+                            if (idx === 0) {
+                                this.noise = this.row.getThis().noises[0];
+                                this.noise.setSelect(true);
+                            } else {
+                                this.noise = this.row.getThis().noises[idx - 1];
+                                this.noise.setSelect(true);
+                            }
+                        }
+                    }
+                    return true;
+                case "q":
+                    this.noise.reduceLine(-1);
+                    return true;
+                case "a":
+                    this.noise.reduceLine(1);
+                    return true;
+                case "s":
+                    this.noise.reduceTailPoint(-1);
+                    return true;
+                case "d":
+                    this.noise.reduceTailPoint(1);
+                    return true;
+                default:
+                    return false;
+            }
+        } else return false;
+    }
+    keyRow(ev: KeyboardEvent): boolean {
+        if (this.row !== null) {
+            switch (ev.key) {
+                case "Enter":
+                    if (this.row.getThis().noises.length <= 0) {
+                        this.row.addNoise(this.row.getThis().noises.length);
+                    }
+                    this.noise = this.row.getThis().noises[0];
+                    this.noise.setSelect(true);
+                    this.row.setSelect(false);
+                    return true;
+                case "Escape":
+                    this.row.setSelect(false);
+                    this.row = null;
+                    return true;
+                case " ":
+                    this.row.addNoise(this.row.getThis().noises.length);
+                    return true;
+                case "Backspace":
+                    return true;
+
+                default:
+                    return false;
+            }
+        } else return false;
+    }
+
+
+
+    selectSubNoise(s: SelectionSubNoise) {
+        this.subnoise?.setSelect(false);
+        this.subnoise = s;
+        this.subnoise.setSelect(true);
+        this.selectNoise(s.getThis().noise);
+    }
+    selectNoise(s: SelectionNoise) {
+        this.noise?.setSelect(false);
+        this.noise = s;
+        if (this.subnoise === null) this.noise.setSelect(true);
+        this.selectRow(s.getThis().row);
+    }
+    selectRow(s: SelectionRow) {
+        this.row?.setSelect(false);
+        this.row = s;
+        if (this.noise === null) this.row.setSelect(true);
+    }
+
+
+
+}
+
+export default Selector;

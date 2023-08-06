@@ -13,6 +13,7 @@ import './util/string.extensions'
 import P, { calcSubTextWidth } from "./util/placement";
 //import gStore ,{  IinitialData} from "./global/global"
 import gStore from "./SoundConfig"
+import ViewText, { IMeasure, INote,  ViewTextApp} from './txViewText';
 
 
 
@@ -188,64 +189,31 @@ const tempRow: ComponentStory<typeof SoundRow> = (args) => <svg>
 export const TempRow = tempRow.bind({});
 
 
+interface IList {
+    n: number[];
+}
+//let list: IList = { n: [4, 3, 2, 1, 0] };
+let list: number[] = [4, 3, 2, 1, 0];
+function ChackList(props: IList ) {
+    let strAll: string = "";
+    console.log('this.props.n =>');
+    console.log(props.n);
+    props.n.forEach((it, idx) => {
+        strAll += it;})
+    return (<Text >{strAll}</Text>)
+}
 
-//function nparagraph({ paragraph, offsety, alignjustify }) {
+const tempList: ComponentStory<typeof SoundRow> = (args) => <svg>
+    <ChackList n={list} />
+</svg>
 
-//interface rparagraphprops {
-//        paragraph?: any,
-//        offsetx?: number,
-//    offsety?: number,
-//    alignjustify?:boolean
-//    }
+export const TempTestList = tempList.bind({});
 
-//const RParagraph: React.FC<RParagraphProps> = ({
-//    paragraph,  offsetX, offsetY, alignJustify
-//}: RParagraphProps) => {
 
-//    console.log("RParagraph1 -->");
-//    console.log(paragraph);
-//    const notations = paragraph.notations || [];
-//    console.log("RParagraph2");
-//    const widthCache = [];
-//    let itemFlexOffset = 0;
-//    //if (alignJustify && paragraph.notations?.length > 1) {
-//    //    const realWidth = calcParagraphWidth(paragraph);
-//    //    itemFlexOffset =
-//    //        (P.maxContentWidth - realWidth) / (paragraph.notations.length - 1);
-//    //}
+const tempVText: ComponentStory<typeof SoundRow> = (args) => <svg
+    width='400'
+    height='1300'>
+    <ViewTextApp/>
+</svg>;
+export const ViewTextList = tempVText.bind({});
 
-//    return (
-//        <Range clazz="Pagen" type="paragraph" offsetY={offsetY}>
-
-//            {paragraph.notations.map((n, i) => (
-//                <RNote
-//                    key={n.key}
-//                    notation={n}
-//                    offsetX={100+i * 30}
-//                    offsetY={100}
-//                />
-//            ))}
-
-//        </Range>
-//    );
-//    //return (
-//    //    <Range clazz="Pagen" type="paragraph" offsetY={offsetY}>
-//    //        {renderParagraphMask()}
-//    //        {renderTies()}
-//    //        {paragraph.notations.map((n, i) => (
-//    //            <RNote
-//    //                key={n.key}
-//    //                notation={n}
-//    //                paragraph={paragraph}
-//    //                offsetX={noteOffsets[i]}
-//    //            />
-//    //        ))}
-//    //        {renderUnderlines()}
-//    //    </Range>
-//    //);
-//}
-//const tempParag: ComponentStory<typeof RParagraph> = (args) => <svg>  <RParagraph 
-//    paragraph={createParagraphWithNotations()}
-///>
-//</svg>;
-//export const TempParage = tempParag.bind({});

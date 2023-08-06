@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
 
-    "experimentalDecorators": true,        
+    "experimentalDecorators": true,
     //"strict": true,
     "skipLibCheck": true,
-    
+
 
     "target": "es5",
     "allowJs": true,
     "sourceMap": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true, /* 允許從沒有默認導出的模塊中默認導入。 這不會影響代碼發出，只會影響類型檢查。 */
-    "esModuleInterop": true /* 通過為所有導入創建命名空間對象，啟用 CommonJS 和 ES 模塊之間的發射互操作性。 暗示“allowSyntheticDefaultImports”。 */
+    "esModuleInterop": true  /* 通過為所有導入創建命名空間對象，啟用 CommonJS 和 ES 模塊之間的發射互操作性。 暗示“allowSyntheticDefaultImports”。 */
 
   }
 }

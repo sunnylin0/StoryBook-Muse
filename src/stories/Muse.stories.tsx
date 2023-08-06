@@ -90,6 +90,9 @@ export const MNPage = Temp8.bind({});
 let pageJSON = new Notation(JSON.parse(jsonResult), new MuseConfig());
 
 MNPage.args = {
+    info: pageJSON.info,
+    config: pageJSON.config,
+    clazz: 'MuseInfo',
     page: pageJSON.pages[0]
 };
 
@@ -106,7 +109,11 @@ MNInfo.args = {
 const Temp6: ComponentStory<typeof MuseNotation> = (args) => <MuseNotation {...args} />;
 export const MNS = Temp6.bind({});
 MNS.args = {
-    notation: new Notation(JSON.parse(jsonResult), new MuseConfig())
+    notation: new Notation(JSON.parse(jsonResult), new MuseConfig()),    
+    info: pageJSON.info,
+    config: pageJSON.config,
+    clazz: 'MuseInfo',
+    page: pageJSON.pages[0]
 };
 
 
@@ -139,13 +146,13 @@ interface TextProps {
      */
     label: string;
     children?: React.ReactNode;
-    props?: any;
+
 }
 
 /**
  * Primary UI component for user interaction
  */
-export const Text = ({
+const Text = ({
     children,
     size = 3,
     backgroundColor,
