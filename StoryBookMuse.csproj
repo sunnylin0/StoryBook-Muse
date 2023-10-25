@@ -195,7 +195,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties NpmRestoreOnProjectOpen="True" package_1json__JsonSchema="" />
+      <UserProperties package_1json__JsonSchema="" NpmRestoreOnProjectOpen="True" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
